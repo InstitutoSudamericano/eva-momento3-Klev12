@@ -1,5 +1,7 @@
 package com.example.evam3.service
 
+import com.example.evam3.entity.Characters
+import com.example.evam3.entity.Film
 import com.example.evam3.entity.Scene
 import com.example.evam3.repository.SceneRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +18,7 @@ class SceneService {
     fun list ():List<Scene>{
         return sceneRepository.findAll()
     }
-    fun save(scene: Scene): Scene{
+    fun save(scene: Scene): Scene {
         try{
             return sceneRepository.save(scene)
         }
@@ -35,6 +37,25 @@ class SceneService {
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
     }
+
+    fun updateName(scene: Scene): Scene{
+        try{
+            val response = sceneRepository.findById(scene.id)
+                    ?: throw Exception("ID no existe")
+            response.apply {
+                description=scene.description //un atributo del modelo
+            }
+            return sceneRepository.save(response)
+        }
+        catch (ex:Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+        }
+    }
+
+    fun listById (id:Long?):Scene?{
+        return sceneRepository.findById(id)
+    }
+
     fun delete (id: Long?):Boolean?{
         try{
             val response = sceneRepository.findById(id)

@@ -11,7 +11,7 @@ class Characters {
     @Column(updatable = false)
     var id: Long? = null
     var description: String? = null
-    var cost: BigDecimal? = null
+    var cost: Double? = null
     @Column(name = "actor_name")
     var actorName: String? = null
     var power: String? = null

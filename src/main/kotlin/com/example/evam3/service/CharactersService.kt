@@ -1,8 +1,10 @@
 package com.example.evam3.service
 
 import com.example.evam3.entity.Characters
+import com.example.evam3.entity.Film
 import com.example.evam3.entity.Scene
 import com.example.evam3.repository.CharactersRepository
+import com.example.evam3.repository.SceneRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -13,9 +15,14 @@ import org.springframework.web.server.ResponseStatusException
 class CharactersService {
     @Autowired
     lateinit var charactersRepository: CharactersRepository
+
+    @Autowired
+    lateinit var sceneRepository: SceneRepository
     fun list ():List<Characters>{
         return charactersRepository.findAll()
     }
+
+
     fun save(characters: Characters): Characters {
         try{
             return charactersRepository.save(characters)
@@ -34,6 +41,24 @@ class CharactersService {
         catch (ex:Exception){
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
+    }
+
+    fun updateName(characters: Characters): Characters{
+        try{
+            val response = charactersRepository.findById(characters.id)
+                    ?: throw Exception("ID no existe")
+            response.apply {
+                description=characters.description //un atributo del modelo
+            }
+            return charactersRepository.save(response)
+        }
+        catch (ex:Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+        }
+    }
+
+    fun listById (id:Long?):Characters?{
+        return charactersRepository.findById(id)
     }
     fun delete (id: Long?):Boolean?{
         try{
